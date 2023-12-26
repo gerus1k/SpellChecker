@@ -1,4 +1,5 @@
 package org.example;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,19 +35,33 @@ public class Main {
         });
     }
 
+
     private void initialize() {
-        frame = new JFrame("Language Checker");
+        frame = new JFrame("");
         frame.setBounds(100, 100, 600, 400);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel panel = new JPanel();
-        frame.getContentPane().add(panel, BorderLayout.NORTH);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        frame.getContentPane().add(mainPanel);
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+
+        JLabel lblCheckIt = new JLabel("Check It");
+        lblCheckIt.setHorizontalAlignment(SwingConstants.CENTER);
+        topPanel.add(lblCheckIt, BorderLayout.NORTH);
+
+        JLabel lblDescription = new JLabel("<html><div style='text-align: center;'>Просто предоставьте URL-ссылку на нужный сайт, и Spell Checker автоматически проанализирует текст на странице, выявляя и исправляя возможные ошибки. Улучшите качество контента, повысьте профессионализм и уверенность в своих текстах с помощью нашего надежного инструмента Check It.</div></html>");
+        topPanel.add(lblDescription, BorderLayout.CENTER);
+
+        JPanel inputPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        topPanel.add(inputPanel, BorderLayout.SOUTH);
 
         JLabel lblEnterTheUrl = new JLabel("Enter the URL to check:");
-        panel.add(lblEnterTheUrl);
+        inputPanel.add(lblEnterTheUrl);
 
         urlTextField = new JTextField();
-        panel.add(urlTextField);
+        inputPanel.add(urlTextField);
         urlTextField.setColumns(30);
 
         JButton btnCheck = new JButton("Check");
@@ -61,15 +76,57 @@ public class Main {
                 }
             }
         });
-        panel.add(btnCheck);
+        inputPanel.add(btnCheck);
+
+        JSeparator separator = new JSeparator();
+        separator.setPreferredSize(new Dimension(600, 5)); // Регулируйте размер по вашему желанию
+        mainPanel.add(separator, BorderLayout.CENTER);
+
+        JPanel settingsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        mainPanel.add(settingsPanel, BorderLayout.CENTER);
+
+        JPanel languageSettingsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        settingsPanel.add(languageSettingsPanel);
+
+        JLabel lblLanguageSettings = new JLabel("Выбор языка для проверки:");
+        languageSettingsPanel.add(lblLanguageSettings);
+
+        JCheckBox chkRussian = new JCheckBox("Russian");
+        chkRussian.setSelected(true); // Выбран по умолчанию
+        languageSettingsPanel.add(chkRussian);
+
+        JCheckBox chkEnglish = new JCheckBox("English");
+        languageSettingsPanel.add(chkEnglish);
+
+        JButton btnAddLanguage = new JButton("Add"); // Заглушка под кнопку "Добавить"
+        languageSettingsPanel.add(btnAddLanguage);
+
+        JPanel checkSettingsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        settingsPanel.add(checkSettingsPanel);
+
+        JLabel lblCheckSettings = new JLabel("Выбор проверок:");
+        checkSettingsPanel.add(lblCheckSettings);
+
+        JCheckBox chkGrammar = new JCheckBox("Проверка грамматики на ошибки");
+        chkGrammar.setSelected(true); // Выбран по умолчанию
+        checkSettingsPanel.add(chkGrammar);
+
+        JCheckBox chkSyntax = new JCheckBox("Проверка синтаксиса на ошибки");
+        chkSyntax.setSelected(true); // Выбран по умолчанию
+        checkSettingsPanel.add(chkSyntax);
+
+        JCheckBox chkSentenceStructure = new JCheckBox("Проверка на правила построения предложений");
+        chkSentenceStructure.setSelected(true); // Выбран по умолчанию
+        checkSettingsPanel.add(chkSentenceStructure);
 
         resultTextArea = new JTextArea();
         resultTextArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(resultTextArea);
-        frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+        mainPanel.add(scrollPane, BorderLayout.SOUTH);
 
         frame.setVisible(true);
     }
+
 
     private void onCheckButtonClick() throws InterruptedException, LangDetectException, IOException {
         String url = urlTextField.getText();
@@ -124,5 +181,4 @@ public class Main {
         driver.close();
         driver.quit();
     }
-
 }
